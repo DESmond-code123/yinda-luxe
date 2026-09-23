@@ -252,16 +252,44 @@
 
 <script>
   // Sample Sample Products Data (Modify or expand as needed)
-  const products = [
-    { id: 1, name: "Monogram Tote Bag", category: "Bags", price: 45000, desc: "Spacious everyday luxury leather tote." },
-    { id: 2, name: "Executive Chronograph Watch", category: "Watches", price: 85000, desc: "Precision stainless steel timepiece." },
-    { id: 3, name: "Classic Silk Shirt", category: "Men", price: 30000, desc: "Tailored fit breathable silk shirt." },
-    { id: 4, name: "Velvet Evening Clutch", category: "Women", price: 25000, desc: "Statement accessory for special nights." },
-    { id: 5, name: "Minimalist Chain Necklace", category: "Accessories", price: 15000, desc: "Gold-plated timeless staple piece." },
-    { id: 6, name: "Unisex Oversized Hoodie", category: "Unisex", price: 35000, desc: "Heavyweight plush fleece comfort." }
-  ];
+   const SUPABASE_URL = 
+"https://onhzvbkjlqpcchftatxp.supabase.co";
+   const SUPABASE_KEY = 
+"sb_publishable_8i7_K9oW3UeenOK_MfHkzw_jamX5QGS";
 
-  let cart = [];
+let products = [];
+let cart = [];
+
+async function loadProducts() {
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/products?select=*`,
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to load products");
+    }
+
+    products = await response.json();
+
+    // Make Supabase field names match the existing website code
+    products = products.map(product => ({
+      ...product,
+      desc: product.description
+    }));
+
+    renderProducts();
+  } catch (error) {
+    console.error("Error loading products:", error);
+  }
+
+}
 
   // DOM Elements
   const productsContainer = document.getElementById('products');
@@ -285,32 +313,43 @@
 
   // Render Products
   function renderProducts(filter = 'All', container = productsContainer, list = products) {
-    container.innerHTML = '';
-    const filtered = filter === 'All' ? list : list.filter(p => p.category === filter);
-    
-    if(filtered.length === 0) {
-      container.innerHTML = '<p style="color:var(--muted)">No products found.</p>';
-      return;
-    }
+  container.innerHTML = '';
 
-    filtered.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'product-card';
-      card.innerHTML = `
-        <div class="product-img">${p.category}</div>
-        <div class="product-info">
-          <span>${p.category}</span>
-          <h3>${p.name}</h3>
-          <p>${p.desc}</p>
-        </div>
-        <div class="product-footer">
-          <strong>₦${p.price.toLocaleString()}</strong>
-          <button class="btn" onclick="addToCart(${p.id})">Add to Bag</button>
-        </div>
-      `;
-      container.appendChild(card);
-    });
+  const filtered = filter === 'All'
+    ? list
+    : list.filter(p => p.category === filter);
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<p style="color:var(--muted)">No products found.</p>';
+    return;
   }
+
+  filtered.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    const image = p.image_url
+      ? `<img src="${p.image_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`
+      : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);">${p.category}</div>`;
+
+    card.innerHTML = `
+      <div class="product-img">
+        ${image}
+      </div>
+      <div class="product-info">
+        <span>${p.category}</span>
+        <h3>${p.name}</h3>
+        <p>${p.description || ''}</p>
+      </div>
+      <div class="product-footer">
+        <strong>₦${Number(p.price).toLocaleString()}</strong>
+        <button class="btn" onclick="addToCart(${p.id})">Add to Bag</button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
 
   // Filter Event Listeners
   document.querySelectorAll('.filters button, .categories button').forEach(btn => {
@@ -436,7 +475,7 @@
   });
 
   // Initial Load
-  renderProducts();
+loadProducts();
 </script>
 </body>
 </html>
