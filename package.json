@@ -1,0 +1,13 @@
+{
+  "name": "yindas-luxe-netlify",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"No build step required\""
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "express": "^4.21.2",
+    "serverless-http": "^3.2.0"
+  }
+}
