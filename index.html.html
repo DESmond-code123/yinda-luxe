@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yinda's Luxe — Fashion & Accessories</title>
+<meta name="description" content="Yinda's Luxe — bags, men's, women's, unisex fashion, watches and accessories.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --text: #1a1a1a;
+    --accent: #b89753;
+    --accent-dark: #96763a;
+    --muted: #666;
+    --border: #e2dfd8;
+    --card-bg: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.5; }
+  h1, h2, h3, .brand { font-family: 'Playfair Display', serif; }
+  
+  /* Navbar */
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+  .brand { font-size: 1.5rem; font-weight: 700; text-decoration: none; color: var(--text); letter-spacing: 1px; }
+  .brand span { color: var(--accent); }
+  .nav nav a { margin: 0 1rem; text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.95rem; }
+  .nav nav a:hover { color: var(--accent); }
+  .nav-actions { display: flex; gap: 1rem; align-items: center; }
+  .nav-actions button { background: none; border: none; font-size: 1rem; cursor: pointer; font-family: inherit; font-weight: 500; }
+  .menu { display: none; font-size: 1.2rem; }
+
+  /* Hero Section */
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; padding: 5% 5%; min-height: 80vh; }
+  .hero-copy .eyebrow, .section-head .eyebrow, .banner .eyebrow, .contact .eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); margin-bottom: 1rem; }
+  .hero-copy h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero-copy h1 em { font-style: italic; color: var(--accent); }
+  .hero-copy p { color: var(--muted); margin-bottom: 2rem; font-size: 1.1rem; }
+  .btn { display: inline-block; background: var(--text); color: #fff; padding: 0.8rem 1.8rem; border-radius: 4px; text-decoration: none; font-weight: 500; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn:hover { background: var(--accent); }
+  .btn.dark { background: var(--accent); }
+  .btn.dark:hover { background: var(--accent-dark); }
+  .btn.full { width: 100%; text-align: center; }
+  
+  .hero-card { background: var(--accent); color: #fff; border-radius: 12px; padding: 4rem 2rem; display: flex; align-items: center; justify-content: center; text-align: center; box-shadow: 0 20px 40px rgba(184, 151, 83, 0.2); }
+  .hero-card small { display: block; font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 1rem; opacity: 0.9; }
+  .hero-card strong { font-size: 2rem; line-height: 1.2; font-family: 'Playfair Display', serif; }
+
+  /* Sections */
+  .section { padding: 5rem 5%; }
+  .section-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+  .section-head h2 { font-size: 2.5rem; }
+
+  /* Categories */
+  .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+  .categories button { background: var(--card-bg); border: 1px solid var(--border); padding: 2rem 1.5rem; text-align: left; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .categories button span { display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .categories button:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.03); }
+
+  /* Filters */
+  .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filters button { background: none; border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-family: inherit; }
+  .filters button.active, .filters button:hover { background: var(--text); color: #fff; border-color: var(--text); }
+
+  /* Products Grid */
+  .products { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem; }
+  .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: box-shadow 0.2s; }
+  .product-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+  .product-img { height: 220px; background: #eee; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 0.9rem; }
+  .product-info { padding: 1.5rem; }
+  .product-info span { font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .product-info h3 { font-size: 1.2rem; margin: 0.3rem 0; }
+  .product-info p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+  .product-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem 1.5rem; }
+  .product-footer strong { font-size: 1.1rem; }
+
+  /* Banner & Contact */
+  .banner { background: var(--text); color: #fff; padding: 5rem 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; margin: 3rem 5%; border-radius: 12px; }
+  .banner h2 { font-size: 2.5rem; margin: 0.5rem 0; }
+  .banner p { color: #ccc; max-width: 500px; }
+  
+  .contact { display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: 12px; margin: 0 5% 5% 5%; padding: 4rem; }
+  .whatsapp { display: inline-block; margin-top: 1.5rem; color: #25D366; font-weight: 600; text-decoration: none; }
+  .contact-box { background: var(--bg); padding: 2rem; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+  .contact-box strong { display: block; font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .contact-box span { color: var(--muted); font-size: 0.85rem; }
+
+  /* Footer */
+  footer { display: flex; justify-content: space-between; align-items: center; padding: 3rem 5%; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted); }
+  footer a { color: var(--text); text-decoration: none; }
+
+  /* Cart Drawer & Modals */
+  .drawer { position: fixed; top: 0; right: -400px; width: 100%; max-width: 400px; height: 100%; background: #fff; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 1000; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 2rem; }
+  .drawer.open { right: 0; }
+  .drawer-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+  .drawer-head button { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+  #cartItems { flex: 1; overflow-y: auto; margin-bottom: 1rem; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+  .cart-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+
+  .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; display: none; }
+  .overlay.show { display: block; }
+
+  .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: #fff; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 500px; z-index: 1001; opacity: 0; pointer-events: none; transition: all 0.3s ease; }
+  .modal.open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .modal .close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+  .modal h2 { margin-bottom: 1.5rem; }
+  .modal form input, .modal form textarea { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; }
+  .modal form textarea { resize: vertical; height: 100px; }
+  .modal .muted { font-size: 0.8rem; color: var(--muted); margin-top: 1rem; text-align: center; }
+
+  .products.compact .product-card { flex-direction: row; align-items: center; }
+  .products.compact .product-img { width: 80px; height: 80px; }
+
+  @media(max-width: 768px) {
+    .hero { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
+    .hero-copy h1 { font-size: 2.5rem; }
+    .nav nav { display: none; }
+    .menu { display: block; }
+    .contact { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }
+  }
+</style>
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="#home"><span>Y</span> YINDA'S <b>LUXE</b></a>
+  <nav>
+    <a href="#home">Home</a><a href="#shop">Shop</a><a href="#categories">Categories</a><a href="#contact">Contact</a>
+  </nav>
+  <div class="nav-actions">
+    <button id="searchBtn">⌕</button>
+    <button id="cartBtn">Bag (<i id="cartCount" style="font-style:normal;">0</i>)</button>
+    <button class="menu" id="menuBtn">☰</button>
+  </div>
+</header>
+
+<main id="home">
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">CURATED FASHION • EVERYDAY LUXURY</p>
+    <h1>Wear your <em>luxe.</em></h1>
+    <p>Elevated bags, clothing, watches and accessories for every mood. Discover pieces made to make an entrance.</p>
+    <a class="btn" href="#shop">Shop the collection</a>
+  </div>
+  <div class="hero-card">
+    <div>
+      <small>YINDA'S LUXE</small>
+      <strong>STYLE<br>WITHOUT<br>LIMITS.</strong>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="categories">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">SHOP BY CATEGORY</p>
+      <h2>Find your style</h2>
+    </div>
+  </div>
+  <div class="categories">
+    <button data-cat="Bags"><span>01</span>Bags</button>
+    <button data-cat="Men"><span>02</span>Men</button>
+    <button data-cat="Women"><span>03</span>Women</button>
+    <button data-cat="Unisex"><span>04</span>Unisex</button>
+    <button data-cat="Watches"><span>05</span>Watches</button>
+    <button data-cat="Accessories"><span>06</span>Accessories</button>
+  </div>
+</section>
+
+<section class="section" id="shop">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">THE COLLECTION</p>
+      <h2>Featured pieces</h2>
+    </div>
+    <div class="filters">
+      <button class="active" data-cat="All">All</button>
+      <button data-cat="Bags">Bags</button>
+      <button data-cat="Men">Men</button>
+      <button data-cat="Women">Women</button>
+      <button data-cat="Unisex">Unisex</button>
+      <button data-cat="Watches">Watches</button>
+      <button data-cat="Accessories">Accessories</button>
+    </div>
+  </div>
+  <div id="products" class="products"></div>
+</section>
+
+<section class="banner">
+  <div>
+    <p class="eyebrow">THE YINDA'S PROMISE</p>
+    <h2>Luxury is a feeling.</h2>
+    <p>Thoughtful pieces, effortless styling, and a shopping experience built around you.</p>
+  </div>
+  <a class="btn dark" href="#contact">Talk to us</a>
+</section>
+
+<section class="section contact" id="contact">
+  <div>
+    <p class="eyebrow">LET'S CONNECT</p>
+    <h2>Need help choosing?</h2>
+    <p>Chat with Yinda's Luxe on WhatsApp for product questions, availability and orders.</p>
+    <a class="whatsapp" target="_blank" href="https://wa.me/2347081366258?text=Hello%20Yinda%27s%20Luxe%2C%20I%27d%20like%20to%20make%20an%20enquiry.">WhatsApp us →</a>
+  </div>
+  <div class="contact-box">
+    <strong>+234 708 136 6258</strong>
+    <span>WhatsApp • Orders • Enquiries</span>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="brand"><span>Y</span> YINDA'S <b>LUXE</b></div>
+  <p>© 2026 Yinda's Luxe. All rights reserved.</p>
+  <a href="#home">Back to top</a>
+</footer>
+
+<!-- Cart Drawer -->
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Your bag</h3>
+    <button id="closeCart">×</button>
+  </div>
+  <div id="cartItems"><p style="color:var(--muted); text-align:center; margin-top:2rem;">Your bag is empty.</p></div>
+  <div class="cart-total"><span>Total</span><strong id="cartTotal">₦0</strong></div>
+  <button class="btn full" id="checkoutBtn">Checkout</button>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<!-- Checkout Modal -->
+<div class="modal" id="checkoutModal">
+  <button class="close" id="closeCheckout">×</button>
+  <h2>Complete your order</h2>
+  <form id="checkoutForm">
+    <input name="customer_name" placeholder="Full name" required>
+    <input name="phone" placeholder="Phone number" required>
+    <textarea name="address" placeholder="Delivery address"></textarea>
+    <button class="btn full" type="submit">Place order</button>
+  </form>
+  <p class="muted">After submitting, we'll open WhatsApp with your order details.</p>
+</div>
+
+<!-- Search Modal -->
+<div class="modal" id="searchModal">
+  <button class="close" id="closeSearch">×</button>
+  <h2>Search Yinda's Luxe</h2>
+  <input id="searchInput" placeholder="Search products..." style="width:100%; padding:0.8rem; margin-bottom:1.5rem; border:1px solid var(--border); border-radius:4px; font-family:inherit;">
+  <div id="searchResults" class="products compact"></div>
+</div>
+
+<script>
+  // Sample Sample Products Data (Modify or expand as needed)
+  const products = [
+    { id: 1, name: "Monogram Tote Bag", category: "Bags", price: 45000, desc: "Spacious everyday luxury leather tote." },
+    { id: 2, name: "Executive Chronograph Watch", category: "Watches", price: 85000, desc: "Precision stainless steel timepiece." },
+    { id: 3, name: "Classic Silk Shirt", category: "Men", price: 30000, desc: "Tailored fit breathable silk shirt." },
+    { id: 4, name: "Velvet Evening Clutch", category: "Women", price: 25000, desc: "Statement accessory for special nights." },
+    { id: 5, name: "Minimalist Chain Necklace", category: "Accessories", price: 15000, desc: "Gold-plated timeless staple piece." },
+    { id: 6, name: "Unisex Oversized Hoodie", category: "Unisex", price: 35000, desc: "Heavyweight plush fleece comfort." }
+  ];
+
+  let cart = [];
+
+  // DOM Elements
+  const productsContainer = document.getElementById('products');
+  const cartBtn = document.getElementById('cartBtn');
+  const cartDrawer = document.getElementById('cartDrawer');
+  const closeCart = document.getElementById('closeCart');
+  const overlay = document.getElementById('overlay');
+  const cartCount = document.getElementById('cartCount');
+  const cartItemsContainer = document.getElementById('cartItems');
+  const cartTotal = document.getElementById('cartTotal');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  const checkoutModal = document.getElementById('checkoutModal');
+  const closeCheckout = document.getElementById('closeCheckout');
+  const checkoutForm = document.getElementById('checkoutForm');
+  
+  const searchBtn = document.getElementById('searchBtn');
+  const searchModal = document.getElementById('searchModal');
+  const closeSearch = document.getElementById('closeSearch');
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+
+  // Render Products
+  function renderProducts(filter = 'All', container = productsContainer, list = products) {
+    container.innerHTML = '';
+    const filtered = filter === 'All' ? list : list.filter(p => p.category === filter);
+    
+    if(filtered.length === 0) {
+      container.innerHTML = '<p style="color:var(--muted)">No products found.</p>';
+      return;
+    }
+
+    filtered.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="product-img">${p.category}</div>
+        <div class="product-info">
+          <span>${p.category}</span>
+          <h3>${p.name}</h3>
+          <p>${p.desc}</p>
+        </div>
+        <div class="product-footer">
+          <strong>₦${p.price.toLocaleString()}</strong>
+          <button class="btn" onclick="addToCart(${p.id})">Add to Bag</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // Filter Event Listeners
+  document.querySelectorAll('.filters button, .categories button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const cat = e.currentTarget.getAttribute('data-cat');
+      document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+      const activeFilterBtn = document.querySelector(`.filters button[data-cat="${cat}"]`);
+      if(activeFilterBtn) activeFilterBtn.classList.add('active');
+      
+      renderProducts(cat);
+      if(e.currentTarget.closest('#categories')) {
+        document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Cart Logic
+  window.addToCart = function(id) {
+    const item = products.find(p => p.id === id);
+    const existing = cart.find(c => c.id === id);
+    if(existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ ...item, qty: 1 });
+    }
+    updateCart();
+    openDrawer();
+  }
+
+  function updateCart() {
+    cartCount.innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+    if(cart.length === 0) {
+      cartItemsContainer.innerHTML = '<p style="color:var(--muted); text-align:center; margin-top:2rem;">Your bag is empty.</p>';
+      cartTotal.innerText = '₦0';
+      return;
+    }
+
+    cartItemsContainer.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+      total += item.price * item.qty;
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <div>
+          <h4>${item.name}</h4>
+          <small style="color:var(--muted)">₦${item.price.toLocaleString()} × ${item.qty}</small>
+        </div>
+        <button style="background:none; border:none; color:red; cursor:pointer;" onclick="removeFromCart(${item.id})">×</button>
+      `;
+      cartItemsContainer.appendChild(div);
+    });
+    cartTotal.innerText = `₦${total.toLocaleString()}`;
+  }
+
+  window.removeFromCart = function(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+  }
+
+  function openDrawer() {
+    cartDrawer.classList.add('open');
+    overlay.classList.add('show');
+  }
+
+  function closeDrawer() {
+    cartDrawer.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+
+  cartBtn.addEventListener('click', openDrawer);
+  closeCart.addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', () => {
+    closeDrawer();
+    checkoutModal.classList.remove('open');
+    searchModal.classList.remove('open');
+  });
+
+  // Checkout modal
+  checkoutBtn.addEventListener('click', () => {
+    if(cart.length === 0) return alert('Your bag is empty!');
+    closeDrawer();
+    checkoutModal.classList.add('open');
+    overlay.classList.add('show');
+  });
+  closeCheckout.addEventListener('click', () => {
+    checkoutModal.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  checkoutForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(checkoutForm);
+    const name = formData.get('customer_name');
+    const phone = formData.get('phone');
+    const address = formData.get('address');
+
+    let text = `Hello Yinda's Luxe, I'd like to place an order:%0A`;
+    cart.forEach(item => {
+      text += `- ${item.name} (x${item.qty}): ₦${(item.price * item.qty).toLocaleString()}%0A`;
+    });
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    text += `%0ATotal: ₦${total.toLocaleString()}%0A%0A*Customer Details:*%0AName: ${name}%0APhone: ${phone}%0AAddress: ${address}`;
+
+    window.open(`https://wa.me/2347081366258?text=${text}`, '_blank');
+  });
+
+  // Search
+  searchBtn.addEventListener('click', () => {
+    searchModal.classList.add('open');
+    overlay.classList.add('show');
+    searchInput.focus();
+  });
+  closeSearch.addEventListener('click', () => {
+    searchModal.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    const matches = products.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
+    renderProducts('All', searchResults, matches);
+  });
+
+  // Initial Load
+  renderProducts();
+</script>
+</body>
+</html>
