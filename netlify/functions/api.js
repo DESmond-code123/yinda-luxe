@@ -15,7 +15,7 @@ function db() {
   );
 }
 
-app.get("/health", (req, res) => {
+app.get(["/health", "/api/health"], (req, res) => {
   res.json({
     ok: true,
     service: "Yinda's Luxe API",
@@ -26,7 +26,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.get("/products", async (req, res) => {
+app.get(["/products", "/api/products"], async (req, res) => {
   try {
     const { data, error } = await db()
       .from("products")
@@ -40,7 +40,7 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.post("/orders", async (req, res) => {
+app.post(["/orders", "/api/orders"], async (req, res) => {
   try {
     const {
       customer_name,
