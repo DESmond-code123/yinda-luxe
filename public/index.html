@@ -311,8 +311,8 @@ async function loadProducts() {
   const searchInput = document.getElementById('searchInput');
   const searchResults = document.getElementById('searchResults');
 
-  // Render Products
-  function renderProducts(filter = 'All', container = productsContainer, list = products) {
+ // Render Products
+function renderProducts(filter = 'All', container = productsContainer, list = products) {
   container.innerHTML = '';
 
   const filtered = filter === 'All'
@@ -333,17 +333,21 @@ async function loadProducts() {
       : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);">${p.category}</div>`;
 
     card.innerHTML = `
-      <div class="product-img">
+      <div class="product-img" onclick="openProduct(${p.id})" style="cursor:pointer;">
         ${image}
       </div>
-      <div class="product-info">
+
+      <div class="product-info" onclick="openProduct(${p.id})" style="cursor:pointer;">
         <span>${p.category}</span>
         <h3>${p.name}</h3>
         <p>${p.description || ''}</p>
       </div>
+
       <div class="product-footer">
         <strong>₦${Number(p.price).toLocaleString()}</strong>
-        <button class="btn" onclick="addToCart(${p.id})">Add to Bag</button>
+        <button class="btn" onclick="addToCart(${p.id})">
+          Add to Bag
+        </button>
       </div>
     `;
 
