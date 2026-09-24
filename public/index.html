@@ -121,6 +121,17 @@
     .menu { display: block; }
     .contact { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }
   }
+  .variant-btn {
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.variant-btn:hover {
+  background: #f3f3f3;
+}
 </style>
 </head>
 <body>
@@ -249,6 +260,21 @@
   <input id="searchInput" placeholder="Search products..." style="width:100%; padding:0.8rem; margin-bottom:1.5rem; border:1px solid var(--border); border-radius:4px; font-family:inherit;">
   <div id="searchResults" class="products compact"></div>
 </div>
+  <!-- Product Details Modal -->
+<div id="productModal" class="modal" style="display:none;">
+  <div class="modal-content" style="max-width:700px;">
+
+    <button
+      onclick="closeProduct()"
+      style="float:right;font-size:24px;background:none;border:0;cursor:pointer;"
+    >
+      ×
+    </button>
+
+    <div id="productDetails"></div>
+
+  </div>
+</div>
 
 <script>
   // Sample Sample Products Data (Modify or expand as needed)
@@ -312,6 +338,273 @@ async function loadProducts() {
   const searchResults = document.getElementById('searchResults');
 
  // Render Products
+  async function openProduct(productId) {
+  const product = products.find(p => p.id === productId);
+
+  if (!product) {
+    alert('Product not found.');
+    return;
+  }
+
+  const modal = document.getElementById('productModal');
+  const details = document.getElementById('productDetails');
+
+  modal.style.display = 'flex';
+
+  details.innerHTML = `
+    <div style="text-align:center;padding:30px;">
+      <p>Loading product...</p>
+    </div>
+  `;
+
+  try {
+    // Get product images
+    const imagesResponse = await fetch(
+      `${SUPABASE_URL}/rest/v1/product_images?product_id=eq.${productId}&select=*`,
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+
+    // Get product variants
+    const variantsResponse = await fetch(
+      `${SUPABASE_URL}/rest/v1/product_variants?product_id=eq.${productId}&select=*`,
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+
+    const images = await imagesResponse.json();
+    const variants = await variantsResponse.json();
+
+    const mainImage =
+      images.length > 0
+        ? images[0].image_url
+        : product.image_url;
+
+    const colours = [
+      ...new Set(
+        variants
+          .map(v => v.colour)
+          .filter(Boolean)
+      )
+    ];
+
+    const sizes = [
+      ...new Set(
+        variants
+          .map(v => v.size)
+          .filter(Boolean)
+      )
+    ];
+
+    details.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:25px;">
+
+        <!-- Images -->
+        <div>
+
+          <div
+            id="mainProductImage"
+            style="width:100%;height:400px;overflow:hidden;border-radius:12px;"
+          >
+            ${
+              mainImage
+                ? `<img
+                    src="${mainImage}"
+                    style="width:100%;height:100%;object-fit:cover;"
+                    alt="${product.name}"
+                  >`
+                : `<div style="display:flex;align-items:center;justify-content:center;height:100%;">
+                    No image
+                  </div>`
+            }
+          </div>
+
+          <div
+            style="
+              display:flex;
+              gap:10px;
+              margin-top:12px;
+              overflow-x:auto;
+            "
+          >
+            ${images.map((img, index) => `
+              <img
+                src="${img.image_url}"
+                onclick="changeMainProductImage('${img.image_url}')"
+                style="
+                  width:70px;
+                  height:70px;
+                  object-fit:cover;
+                  border-radius:8px;
+                  cursor:pointer;
+                  border:1px solid #ddd;
+                "
+                alt="${product.name} ${index + 1}"
+              >
+            `).join('')}
+          </div>
+
+        </div>
+
+        <!-- Product Information -->
+        <div>
+
+          <span style="color:var(--muted);">
+            ${product.category}
+          </span>
+
+          <h2 style="margin:8px 0;">
+            ${product.name}
+          </h2>
+
+          <h3>
+            ₦${Number(product.price).toLocaleString()}
+          </h3>
+
+          <p>
+            ${product.description || ''}
+          </p>
+
+          ${
+            colours.length
+              ? `
+                <div style="margin-top:20px;">
+                  <strong>Colour</strong>
+
+                  <div
+                    id="colourOptions"
+                    style="
+                      display:flex;
+                      gap:8px;
+                      flex-wrap:wrap;
+                      margin-top:10px;
+                    "
+                  >
+                    ${colours.map(colour => `
+                      <button
+                        class="variant-btn"
+                        onclick="selectColour('${colour}')"
+                        data-colour="${colour}"
+                      >
+                        ${colour}
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+              `
+              : ''
+          }
+
+          ${
+            sizes.length
+              ? `
+                <div style="margin-top:20px;">
+                  <strong>Size</strong>
+
+                  <div
+                    id="sizeOptions"
+                    style="
+                      display:flex;
+                      gap:8px;
+                      flex-wrap:wrap;
+                      margin-top:10px;
+                    "
+                  >
+                    ${sizes.map(size => `
+                      <button
+                        class="variant-btn"
+                        onclick="selectSize('${size}')"
+                        data-size="${size}"
+                      >
+                        ${size}
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+              `
+              : ''
+          }
+
+          <button
+            class="btn"
+            style="width:100%;margin-top:25px;"
+            onclick="addToCart(${product.id})"
+          >
+            Add to Bag
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+  } catch (error) {
+    console.error(error);
+
+    details.innerHTML = `
+      <p style="color:red;">
+        Failed to load product details.
+      </p>
+    `;
+  }
+}
+
+
+function closeProduct() {
+  document.getElementById('productModal').style.display = 'none';
+}
+
+
+function changeMainProductImage(url) {
+  document.getElementById('mainProductImage').innerHTML = `
+    <img
+      src="${url}"
+      style="width:100%;height:100%;object-fit:cover;"
+    >
+  `;
+}
+
+
+function selectColour(colour) {
+  document.querySelectorAll('[data-colour]').forEach(button => {
+    button.style.background = '';
+    button.style.color = '';
+  });
+
+  const selected = document.querySelector(
+    `[data-colour="${colour}"]`
+  );
+
+  if (selected) {
+    selected.style.background = '#111';
+    selected.style.color = '#fff';
+  }
+}
+
+
+function selectSize(size) {
+  document.querySelectorAll('[data-size]').forEach(button => {
+    button.style.background = '';
+    button.style.color = '';
+  });
+
+  const selected = document.querySelector(
+    `[data-size="${size}"]`
+  );
+
+  if (selected) {
+    selected.style.background = '#111';
+    selected.style.color = '#fff';
+  }
+          }
 function renderProducts(filter = 'All', container = productsContainer, list = products) {
   container.innerHTML = '';
 
